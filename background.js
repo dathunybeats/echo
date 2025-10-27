@@ -1,3 +1,35 @@
+// Create context menu on extension install
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: 'askChatGPT',
+    title: 'Ask ChatGPT',
+    contexts: ['selection']
+  });
+
+  chrome.contextMenus.create({
+    id: 'saveToEcho',
+    title: 'Save to Echo',
+    contexts: ['selection']
+  });
+});
+
+// Handle context menu click
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === 'askChatGPT' && info.selectionText) {
+    const selectedText = info.selectionText;
+    const chatGPTUrl = `https://chatgpt.com/?q=${encodeURIComponent(selectedText)}`;
+
+    // Open ChatGPT in new tab
+    chrome.tabs.create({ url: chatGPTUrl });
+  } else if (info.menuItemId === 'saveToEcho' && info.selectionText) {
+    // Send message to content script to open panel with selected text
+    chrome.tabs.sendMessage(tab.id, {
+      type: 'SAVE_SELECTED_TEXT',
+      text: info.selectionText
+    });
+  }
+});
+
 // Toggle panel when extension icon is clicked
 chrome.action.onClicked.addListener(async (tab) => {
   try {
