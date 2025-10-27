@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Echo",
+  "version": "1.0.0",
+  "description": "Floating overlay panel",
+
+  "action": {
+    "default_title": "Toggle Echo Panel"
+  },
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-script.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ]
+}
